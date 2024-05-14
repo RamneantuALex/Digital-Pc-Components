@@ -1,9 +1,9 @@
-package entity;
+package entity.user;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import org.springframework.stereotype.Component;
+
 @Entity
 @Table(name = "")
 public class User {

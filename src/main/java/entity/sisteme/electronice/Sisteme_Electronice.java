@@ -1,4 +1,4 @@
-package entity;
+package entity.sisteme.electronice;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
