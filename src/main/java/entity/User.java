@@ -7,13 +7,15 @@ import org.springframework.stereotype.Component;
 @Entity
 @Table(name = "")
 public class User {
+    enum Title {JUNIORSWE, SENIORSWE, CLIENT, MANAGER};
+
     @Id
     private int id;
     private String nume;
     private String prenume;
     private String email;
     private String parola;
-
+    private Title title;
     public User(){
 
     }
