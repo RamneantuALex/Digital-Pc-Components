@@ -66,12 +66,15 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", nume='" + nume + '\'' +
-                ", prenume='" + prenume + '\'' +
-                ", email='" + email + '\'' +
-                ", parola='" + parola + '\'' +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("User{")
+                .append("id=").append(id)
+                .append(", nume='").append(nume).append('\'')
+                .append(", prenume='").append(prenume).append('\'')
+                .append(", email='").append(email).append('\'')
+                .append(", parola='").append(parola).append('\'')
+                .append('}');
+        return builder.toString();
     }
+
 }

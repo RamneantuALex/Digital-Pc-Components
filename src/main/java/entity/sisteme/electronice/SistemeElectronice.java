@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 
 @Entity
 @Table(name = "")
-public class Sisteme_Electronice {
+public class SistemeElectronice {
     @Id
     private int pret;
     private String descriere;
@@ -14,9 +14,9 @@ public class Sisteme_Electronice {
     private int stoc;
     private String recenzie;
 
-   public Sisteme_Electronice(){}
+   public SistemeElectronice(){}
 
-    public Sisteme_Electronice(int pret, String descriere, boolean promotie, int stoc, String recenzie) {
+    public SistemeElectronice(int pret, String descriere, boolean promotie, int stoc, String recenzie) {
         this.pret = pret;
         this.descriere = descriere;
         this.promotie = promotie;
@@ -68,12 +68,16 @@ public class Sisteme_Electronice {
 
     @Override
     public String toString() {
-        return "Sisteme_Electronice{" +
-                "pret=" + pret +
-                ", descriere='" + descriere + '\'' +
-                ", promotie=" + promotie + '\'' +
-                ", stoc=" + stoc + '\'' +
-                ", recenzie='" + recenzie + '\'' +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("Sisteme_Electronice{")
+                .append("pret=").append(pret)
+                .append(", descriere='").append(descriere).append('\'')
+                .append(", promotie=").append(promotie)
+                .append(", stoc=").append(stoc)
+                .append(", recenzie='").append(recenzie).append('\'')
+                .append('}');
+        return builder.toString();
     }
+
+
 }
