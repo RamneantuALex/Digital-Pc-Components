@@ -5,79 +5,76 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 
 @Entity
-@Table(name = "")
+@Table(name = "ElectronicSystem")
 public class SistemeElectronice {
+
+    enum system_type{ DESKTOP_PC, LAPTOP_PC, PRINTER, PERIPHERAL, COMPONENT}
     @Id
-    private int pret;
-    private String descriere;
-    private boolean promotie;
-    private int stoc;
-    private String recenzie;
+    private int price;
+    private String description;
+    private boolean promotion;
+    private int stock;
+    private String review;
 
    public SistemeElectronice(){}
 
-    public SistemeElectronice(int pret, String descriere, boolean promotie, int stoc, String recenzie) {
-        this.pret = pret;
-        this.descriere = descriere;
-        this.promotie = promotie;
-        this.stoc = stoc;
-        this.recenzie = recenzie;
+    public SistemeElectronice(int price, String description, boolean promotion, int stock, String review) {
+        this.price = price;
+        this.description = description;
+        this.promotion = promotion;
+        this.stock = stock;
+        this.review = review;
     }
 
-
-
-    public int getPret() {
-        return pret;
+    public int getPrice() {
+        return price;
     }
 
-    public void setPret(int pret) {
-        this.pret = pret;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
-    public String getDescriere() {
-        return descriere;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescriere(String descriere) {
-        this.descriere = descriere;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public boolean isPromotie() {
-        return promotie;
+    public boolean isPromotion() {
+        return promotion;
     }
 
-    public void setPromotie(boolean promotie) {
-        this.promotie = promotie;
+    public void setPromotion(boolean promotion) {
+        this.promotion = promotion;
     }
 
-    public int getStoc() {
-        return stoc;
+    public int getStock() {
+        return stock;
     }
 
-    public void setStoc(int stoc) {
-        this.stoc = stoc;
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
-    public String getRecenzie() {
-        return recenzie;
+    public String getReview() {
+        return review;
     }
 
-    public void setRecenzie(String recenzie) {
-        this.recenzie = recenzie;
+    public void setReview(String review) {
+        this.review = review;
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Sisteme_Electronice{")
-                .append("pret=").append(pret)
-                .append(", descriere='").append(descriere).append('\'')
-                .append(", promotie=").append(promotie)
-                .append(", stoc=").append(stoc)
-                .append(", recenzie='").append(recenzie).append('\'')
-                .append('}');
-        return builder.toString();
+        final StringBuilder sb = new StringBuilder("SistemeElectronice{");
+        sb.append("price=").append(price);
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", promotion=").append(promotion);
+        sb.append(", stock=").append(stock);
+        sb.append(", review='").append(review).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
-
-
 }
