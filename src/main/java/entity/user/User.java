@@ -1,5 +1,6 @@
 package entity.user;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -7,23 +8,28 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "")
 public class User {
-    enum Title {JUNIORSWE, SENIORSWE, CLIENT, MANAGER};
+    enum Role {junior_swe, senior_swe, client, manager};
 
     @Id
     private int id;
+    @Column(name="first_name")
     private String nume;
+    @Column(name="last_name")
     private String prenume;
     private String email;
-    private String parola;
-    private Title title;
+    private String password;
+    private Role role;
+
     public User(){
 
     }
-    public User(String nume, String prenume, String email, String parola) {
+
+    public User(String nume, String prenume, String email, String password, Role role) {
         this.nume = nume;
         this.prenume = prenume;
         this.email = email;
-        this.parola = parola;
+        this.password = password;
+        this.role = role;
     }
 
     public int getId() {
@@ -58,22 +64,19 @@ public class User {
         this.email = email;
     }
 
-    public String getParola() {
-        return parola;
+    public String getPassword() {
+        return password;
     }
 
-    public void setParola(String parola) {
-        this.parola = parola;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", nume='" + nume + '\'' +
-                ", prenume='" + prenume + '\'' +
-                ", email='" + email + '\'' +
-                ", parola='" + parola + '\'' +
-                '}';
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
