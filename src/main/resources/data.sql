@@ -1,3 +1,17 @@
+-- Drop foreign key constraints
+ALTER TABLE Basket DROP FOREIGN KEY Basket_ibfk_1;
+ALTER TABLE Basket DROP FOREIGN KEY Basket_ibfk_2;
+
+ALTER TABLE Orders DROP FOREIGN KEY Orders_ibfk_1;
+ALTER TABLE Orders DROP FOREIGN KEY Orders_ibfk_2;
+
+ALTER TABLE ServiceRequest DROP FOREIGN KEY ServiceRequest_ibfk_1;
+
+ALTER TABLE Review DROP FOREIGN KEY Review_ibfk_1;
+ALTER TABLE Review DROP FOREIGN KEY Review_ibfk_2;
+
+ALTER TABLE ProductDiscount DROP FOREIGN KEY ProductDiscount_ibfk_1;
+
 DROP TABLE IF EXISTS Review;
 DROP TABLE IF EXISTS ServiceRequest;
 DROP TABLE IF EXISTS Orders;

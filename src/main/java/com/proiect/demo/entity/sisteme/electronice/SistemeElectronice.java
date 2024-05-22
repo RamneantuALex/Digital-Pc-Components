@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 public class SistemeElectronice {
 
     @Id
-    private Long id;  // Adăugat identificatorul unic
+    private int id;  // Adăugat identificatorul unic
     private int price;
     private String description;
     private boolean promotion;
@@ -28,11 +28,11 @@ public class SistemeElectronice {
         this.review = review;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
