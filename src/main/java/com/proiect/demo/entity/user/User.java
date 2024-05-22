@@ -1,4 +1,4 @@
-package entity.user;
+package com.proiect.demo.entity.user;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 public class User {
     enum Title {JUNIORSWE, SENIORSWE, CLIENT, MANAGER};
 
-    @Id
+    @Id~
     private int id;
     private String nume;
     private String prenume;

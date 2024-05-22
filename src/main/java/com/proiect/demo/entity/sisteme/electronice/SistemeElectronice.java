@@ -1,22 +1,24 @@
-package entity.sisteme.electronice;
+package com.proiect.demo.entity.sisteme.electronice;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ElectronicSystem")
+@Table(name = "electronicsystem")
 public class SistemeElectronice {
 
-    enum system_type{ DESKTOP_PC, LAPTOP_PC, PRINTER, PERIPHERAL, COMPONENT}
     @Id
+    private Long id;  // Adăugat identificatorul unic
     private int price;
     private String description;
     private boolean promotion;
     private int stock;
     private String review;
 
-   public SistemeElectronice(){}
+    public SistemeElectronice() {}
 
     public SistemeElectronice(int price, String description, boolean promotion, int stock, String review) {
         this.price = price;
@@ -24,6 +26,14 @@ public class SistemeElectronice {
         this.promotion = promotion;
         this.stock = stock;
         this.review = review;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public int getPrice() {
@@ -69,7 +79,8 @@ public class SistemeElectronice {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("SistemeElectronice{");
-        sb.append("price=").append(price);
+        sb.append("id=").append(id);
+        sb.append(", price=").append(price);
         sb.append(", description='").append(description).append('\'');
         sb.append(", promotion=").append(promotion);
         sb.append(", stock=").append(stock);
