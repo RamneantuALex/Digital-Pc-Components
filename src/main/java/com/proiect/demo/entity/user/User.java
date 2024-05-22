@@ -7,15 +7,15 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "")
 public class User {
-    enum Title {JUNIORSWE, SENIORSWE, CLIENT, MANAGER};
+    enum Role {JUNIORSWE, SENIORSWE, CLIENT, MANAGER};
 
-    @Id~
+    @Id
     private int id;
     private String nume;
     private String prenume;
     private String email;
     private String parola;
-    private Title title;
+    private Role role;
     public User(){
 
     }
