@@ -1,33 +1,40 @@
-package com.proiect.demo.entity.sisteme.electronice;
+package com.proiect.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "electronicsystem")
 public class SistemeElectronice {
 
+    private enum SystemType {
+        DESKTOP_PC, LAPTOP_PC, PRINTER, PERIPHERAL, COMPONENT
+    }
+
     @Id
-    private int id;  // Adăugat identificatorul unic
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     private int price;
     private String description;
     private boolean promotion;
     private int stock;
     private String review;
 
+    @Enumerated(EnumType.STRING)
+    private SystemType systemType;
+
     public SistemeElectronice() {}
 
-    public SistemeElectronice(int price, String description, boolean promotion, int stock, String review) {
+    public SistemeElectronice(int price, String description, boolean promotion, int stock, String review, SystemType systemType) {
         this.price = price;
         this.description = description;
         this.promotion = promotion;
         this.stock = stock;
         this.review = review;
+        this.systemType = systemType;
     }
 
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -76,6 +83,14 @@ public class SistemeElectronice {
         this.review = review;
     }
 
+    public SystemType getSystemType() {
+        return systemType;
+    }
+
+    public void setSystemType(SystemType systemType) {
+        this.systemType = systemType;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("SistemeElectronice{");
@@ -85,6 +100,7 @@ public class SistemeElectronice {
         sb.append(", promotion=").append(promotion);
         sb.append(", stock=").append(stock);
         sb.append(", review='").append(review).append('\'');
+        sb.append(", systemType=").append(systemType);
         sb.append('}');
         return sb.toString();
     }
