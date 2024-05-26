@@ -28,7 +28,7 @@ public class ProductDiscountController {
         return productDiscountRepository.save(productDiscount);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ProductDiscount updateProductDiscount(@PathVariable int id, @RequestBody ProductDiscount productDiscount) {
         ProductDiscount existingProductDiscount = productDiscountRepository.findById(id).orElse(null);
         if (existingProductDiscount != null) {
