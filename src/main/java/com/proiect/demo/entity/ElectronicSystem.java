@@ -83,11 +83,11 @@ public class ElectronicSystem {
         this.review = review;
     }
 
-    public systemType getsystemType() {
+    public systemType getSystemType() {
         return systemType;
     }
 
-    public void setsystemType(systemType systemType) {
+    public void setSystemType(systemType systemType) {
         this.systemType = systemType;
     }
 
