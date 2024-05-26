@@ -6,24 +6,26 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+
 @SpringBootApplication
-public class DemoApplication implements CommandLineRunner{
+public class DemoApplication implements CommandLineRunner {
 	@Autowired
-	SistemeElectroniceRepository repository1;
+	ElectronicSystemRepository repository1;
 	@Autowired
 	UserRepository repository2;
 	@Autowired
 	ReviewRepository repository3;
-    @Autowired
+	@Autowired
 	OrdersRepository repository4;
-    @Autowired
+	@Autowired
 	BasketRepository repository5;
 	@Autowired
 	ServiceRequestRepository repository6;
 	@Autowired
 	ProductDiscountRepository repository7;
-	public static void main(String[] args) {
 
+	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 

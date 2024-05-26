@@ -4,23 +4,23 @@ package com.proiect.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table (name="basket")
+@Table (name="Basket")
 
 public class Basket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int client_id;
-    private int product_id;
+    private int clientId;
+    private int productId;
     private int quantity;
 
     public Basket() {
     }
 
-    public Basket(int id, int client_id, int product_id, int quantity) {
+    public Basket(int id, int clientId, int productId, int quantity) {
         this.id = id;
-        this.client_id = client_id;
-        this.product_id = product_id;
+        this.clientId = clientId;
+        this.productId = productId;
         this.quantity = quantity;
     }
 
@@ -32,20 +32,20 @@ public class Basket {
         this.id = id;
     }
 
-    public int getClient_id() {
-        return client_id;
+    public int getClientId() {
+        return clientId;
     }
 
-    public void setClient_id(int client_id) {
-        this.client_id = client_id;
+    public void setClientId(int client_id) {
+        this.clientId = client_id;
     }
 
-    public int getProduct_id() {
-        return product_id;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
+    public void setProductId(int product_id) {
+        this.productId = product_id;
     }
 
     public int getQuantity() {
@@ -60,8 +60,8 @@ public class Basket {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Basket{");
         sb.append("id=").append(id);
-        sb.append(", client_id=").append(client_id);
-        sb.append(", product_id=").append(product_id);
+        sb.append(", client_id=").append(clientId);
+        sb.append(", product_id=").append(productId);
         sb.append(", quantity=").append(quantity);
         sb.append('}');
         return sb.toString();

@@ -4,11 +4,10 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
 @Entity
-@Table (name="servicerequest")
-
+@Table (name="ServiceRequest")
 public class ServiceRequest {
-
     private enum Status{
         SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
     }
@@ -16,8 +15,8 @@ public class ServiceRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int client_id;
-    private LocalDateTime service_date;
+    private int clientId;
+    private LocalDateTime serviceDate;
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -26,8 +25,8 @@ public class ServiceRequest {
 
     public ServiceRequest(int id, int client_id, LocalDateTime service_date, Status status) {
         this.id = id;
-        this.client_id = client_id;
-        this.service_date = service_date;
+        this.clientId = client_id;
+        this.serviceDate = service_date;
         this.status = status;
     }
 
@@ -39,20 +38,20 @@ public class ServiceRequest {
         this.id = id;
     }
 
-    public int getClient_id() {
-        return client_id;
+    public int getClientId() {
+        return clientId;
     }
 
-    public void setClient_id(int client_id) {
-        this.client_id = client_id;
+    public void setClientId(int client_id) {
+        this.clientId = client_id;
     }
 
-    public LocalDateTime getService_date() {
-        return service_date;
+    public LocalDateTime getServiceDate() {
+        return serviceDate;
     }
 
-    public void setService_date(LocalDateTime service_date) {
-        this.service_date = service_date;
+    public void setServiceDate(LocalDateTime service_date) {
+        this.serviceDate = service_date;
     }
 
     public Status getStatus() {
@@ -66,10 +65,10 @@ public class ServiceRequest {
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = service_date.format(formatter);
+        String formattedDate = serviceDate.format(formatter);
         final StringBuilder sb = new StringBuilder("ServiceRequest{");
         sb.append("id=").append(id);
-        sb.append(", client_id=").append(client_id);
+        sb.append(", client_id=").append(clientId);
         sb.append(", service_date=").append(formattedDate);
         sb.append(", status=").append(status);
         sb.append('}');

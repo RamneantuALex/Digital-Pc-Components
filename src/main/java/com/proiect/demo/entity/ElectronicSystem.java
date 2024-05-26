@@ -3,10 +3,10 @@ package com.proiect.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "electronicsystem")
-public class SistemeElectronice {
+@Table(name = "ElectronicSystem")
+public class ElectronicSystem {
 
-    private enum SystemType {
+    private enum systemType {
         DESKTOP_PC, LAPTOP_PC, PRINTER, PERIPHERAL, COMPONENT
     }
 
@@ -21,11 +21,11 @@ public class SistemeElectronice {
     private String review;
 
     @Enumerated(EnumType.STRING)
-    private SystemType systemType;
+    private systemType systemType;
 
-    public SistemeElectronice() {}
+    public ElectronicSystem() {}
 
-    public SistemeElectronice(int price, String description, boolean promotion, int stock, String review, SystemType systemType) {
+    public ElectronicSystem(int price, String description, boolean promotion, int stock, String review, systemType systemType) {
         this.price = price;
         this.description = description;
         this.promotion = promotion;
@@ -83,11 +83,11 @@ public class SistemeElectronice {
         this.review = review;
     }
 
-    public SystemType getSystemType() {
+    public systemType getsystemType() {
         return systemType;
     }
 
-    public void setSystemType(SystemType systemType) {
+    public void setsystemType(systemType systemType) {
         this.systemType = systemType;
     }
 

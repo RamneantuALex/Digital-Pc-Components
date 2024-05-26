@@ -1,30 +1,29 @@
 package com.proiect.demo.entity;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
-@Table(name="productdiscount")
+@Table(name="ProductDiscount")
 public class ProductDiscount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int product_id;
+    private int productId;
     private float discount;
-    private LocalDateTime start_date;
-    private LocalDateTime end_date;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     public ProductDiscount() {
     }
 
     public ProductDiscount(int id, int product_id, float discount, LocalDateTime start_date, LocalDateTime end_date) {
         this.id = id;
-        this.product_id = product_id;
+        this.productId = product_id;
         this.discount = discount;
-        this.start_date = start_date;
-        this.end_date = end_date;
+        this.startDate = start_date;
+        this.endDate = end_date;
     }
 
     public int getId() {
@@ -35,12 +34,12 @@ public class ProductDiscount {
         this.id = id;
     }
 
-    public int getProduct_id() {
-        return product_id;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
+    public void setProductId(int product_id) {
+        this.productId = product_id;
     }
 
     public float getDiscount() {
@@ -51,30 +50,30 @@ public class ProductDiscount {
         this.discount = discount;
     }
 
-    public LocalDateTime getStart_date() {
-        return start_date;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setStart_date(LocalDateTime start_date) {
-        this.start_date = start_date;
+    public void setStartDate(LocalDateTime start_date) {
+        this.startDate = start_date;
     }
 
-    public LocalDateTime getEnd_date() {
-        return end_date;
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 
-    public void setEnd_date(LocalDateTime end_date) {
-        this.end_date = end_date;
+    public void setEndDate(LocalDateTime end_date) {
+        this.endDate = end_date;
     }
 
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = start_date.format(formatter);
-        String formattedDate1 = end_date.format(formatter);
+        String formattedDate = startDate.format(formatter);
+        String formattedDate1 = endDate.format(formatter);
         final StringBuilder sb = new StringBuilder("ProductDiscount{");
         sb.append("id=").append(id);
-        sb.append(", product_id=").append(product_id);
+        sb.append(", product_id=").append(productId);
         sb.append(", discount=").append(discount);
         sb.append(", start_date=").append(formattedDate);
         sb.append(", end_date=").append(formattedDate1);

@@ -9,9 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "user")
+@Table(name = "User")
 public class User {
-
     public enum Role {
         JUNIOR_SWE, SENIOR_SWE, CLIENT, MANAGER
     }

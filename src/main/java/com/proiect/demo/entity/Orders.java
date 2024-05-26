@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "Orders")
 public class Orders {
 
     private enum Status {
