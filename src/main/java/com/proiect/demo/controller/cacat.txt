@@ -1,0 +1,402 @@
+package com.proiect.demo.controller;
+
+import com.proiect.demo.entity.Basket;
+import com.proiect.demo.repository.BasketRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/baskets")
+public class BasketController {
+    @Autowired
+    private BasketRepository basketRepository;
+
+    @GetMapping("/all")
+    public String getAllBaskets(Model model) {
+        List<Basket> baskets = basketRepository.findAll();
+        model.addAttribute("baskets", baskets);
+        return "basket_list"; // Return the name of the HTML template
+    }
+
+    @GetMapping("/{id}")
+    public String getBasketById(@PathVariable int id, Model model) {
+        Basket basket = basketRepository.findById(id).orElse(null);
+        model.addAttribute("basket", basket);
+        return "basket_detail"; // Return the name of the HTML template
+    }
+
+    @PostMapping
+    @ResponseBody
+    public Basket createBasket(@RequestBody Basket basket) {
+        return basketRepository.save(basket);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public Basket updateBasket(@PathVariable int id, @RequestBody Basket basket) {
+        Basket existingBasket = basketRepository.findById(id).orElse(null);
+        if (existingBasket != null) {
+            existingBasket.setClientId(basket.getClientId());
+            existingBasket.setProductId(basket.getProductId());
+            existingBasket.setQuantity(basket.getQuantity());
+            return basketRepository.save(existingBasket);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteBasket(@PathVariable int id) {
+        basketRepository.deleteById(id);
+    }
+}
+package com.proiect.demo.controller;
+
+import com.proiect.demo.entity.Review;
+import com.proiect.demo.repository.ReviewRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/reviews")
+public class ReviewController {
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    @GetMapping("/all")
+    public String getAllReviews(Model model) {
+        List<Review> reviews = reviewRepository.findAll();
+        model.addAttribute("reviews", reviews);
+        return "review_list"; // Return the name of the HTML template
+    }
+
+    @GetMapping("/{id}")
+    public String getReviewById(@PathVariable int id, Model model) {
+        Review review = reviewRepository.findById(id).orElse(null);
+        model.addAttribute("review", review);
+        return "review_detail"; // Return the name of the HTML template
+    }
+
+    @PostMapping
+    @ResponseBody
+    public Review createReview(@RequestBody Review review) {
+        return reviewRepository.save(review);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public Review updateReview(@PathVariable int id, @RequestBody Review review) {
+        Review existingReview = reviewRepository.findById(id).orElse(null);
+        if (existingReview != null) {
+            existingReview.setClientId(review.getClientId());
+            existingReview.setProductId(review.getProductId());
+            existingReview.setRating(review.getRating());
+            existingReview.setComment(review.getComment());
+            existingReview.setReviewDate(review.getReviewDate());
+            return reviewRepository.save(existingReview);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteReview(@PathVariable int id) {
+        reviewRepository.deleteById(id);
+    }
+}
+package com.proiect.demo.controller;
+
+import com.proiect.demo.entity.ElectronicSystem;
+import com.proiect.demo.repository.ElectronicSystemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/electronicSystems")
+public class ElectronicSystemController {
+    @Autowired
+    private ElectronicSystemRepository electronicSystemRepository;
+
+    @GetMapping("/all")
+    public String getAllElectronicSystems(Model model) {
+        List<ElectronicSystem> electronicSystems = electronicSystemRepository.findAll();
+        model.addAttribute("electronicSystems", electronicSystems);
+        return "electronicSystem_list"; // Return the name of the HTML template
+    }
+
+    @GetMapping("/{id}")
+    public String getElectronicSystemById(@PathVariable int id, Model model) {
+        ElectronicSystem electronicSystem = electronicSystemRepository.findById(id).orElse(null);
+        model.addAttribute("electronicSystem", electronicSystem);
+        return "electronicSystem_detail"; // Return the name of the HTML template
+    }
+
+    @PostMapping
+    @ResponseBody
+    public ElectronicSystem createElectronicSystem(@RequestBody ElectronicSystem electronicSystem) {
+        return electronicSystemRepository.save(electronicSystem);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public ElectronicSystem updateElectronicSystem(@PathVariable int id, @RequestBody ElectronicSystem electronicSystem) {
+        ElectronicSystem existingElectronicSystem = electronicSystemRepository.findById(id).orElse(null);
+        if (existingElectronicSystem != null) {
+            existingElectronicSystem.setPrice(electronicSystem.getPrice());
+            existingElectronicSystem.setDescription(electronicSystem.getDescription());
+            existingElectronicSystem.setPromotion(electronicSystem.isPromotion());
+            existingElectronicSystem.setStock(electronicSystem.getStock());
+            existingElectronicSystem.setReview(electronicSystem.getReview());
+            existingElectronicSystem.setSystemType(electronicSystem.getSystemType());
+            return electronicSystemRepository.save(existingElectronicSystem);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteElectronicSystem(@PathVariable int id) {
+        electronicSystemRepository.deleteById(id);
+    }
+}
+package com.proiect.demo.controller;
+
+import com.proiect.demo.entity.ServiceRequest;
+import com.proiect.demo.repository.ServiceRequestRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/serviceRequest")
+public class ServiceRequestController {
+    @Autowired
+    private ServiceRequestRepository serviceRequestRepository;
+
+    @GetMapping("/all")
+    public String getAllServiceRequests(Model model) {
+        List<ServiceRequest> serviceRequests = serviceRequestRepository.findAll();
+        model.addAttribute("serviceRequests", serviceRequests);
+        return "serviceRequest_list"; // Return the name of the HTML template
+    }
+
+    @GetMapping("/{id}")
+    public String getServiceRequestById(@PathVariable int id, Model model) {
+        ServiceRequest serviceRequest = serviceRequestRepository.findById(id).orElse(null);
+        model.addAttribute("serviceRequest", serviceRequest);
+        return "serviceRequest_detail"; // Return the name of the HTML template
+    }
+
+    @PostMapping
+    @ResponseBody
+    public ServiceRequest createServiceRequest(@RequestBody ServiceRequest serviceRequest) {
+        return serviceRequestRepository.save(serviceRequest);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public ServiceRequest updateServiceRequest(@PathVariable int id, @RequestBody ServiceRequest serviceRequest) {
+        ServiceRequest existingServiceRequest = serviceRequestRepository.findById(id).orElse(null);
+        if (existingServiceRequest != null) {
+            existingServiceRequest.setClientId(serviceRequest.getClientId());
+            existingServiceRequest.setServiceDate(serviceRequest.getServiceDate());
+            existingServiceRequest.setStatus(serviceRequest.getStatus());
+            return serviceRequestRepository.save(existingServiceRequest);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteServiceRequest(@PathVariable int id) {
+        serviceRequestRepository.deleteById(id);
+    }
+}
+package com.proiect.demo.controller;
+
+import com.proiect.demo.entity.Orders;
+import com.proiect.demo.repository.OrdersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/orders")
+public class OrdersController {
+    @Autowired
+    private OrdersRepository ordersRepository;
+
+    @GetMapping("/all")
+    public String getAllOrders(Model model) {
+        List<Orders> orders = ordersRepository.findAll();
+        model.addAttribute("orders", orders);
+        return "orders_list"; // Return the name of the HTML template
+    }
+
+    @GetMapping("/{id}")
+    public String getOrderById(@PathVariable int id, Model model) {
+        Orders order = ordersRepository.findById(id).orElse(null);
+        model.addAttribute("order", order);
+        return "orders_detail"; // Return the name of the HTML template
+    }
+
+    @PostMapping
+    @ResponseBody
+    public Orders createOrder(@RequestBody Orders order) {
+        return ordersRepository.save(order);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public Orders updateOrder(@PathVariable int id, @RequestBody Orders order) {
+        Orders existingOrder = ordersRepository.findById(id).orElse(null);
+        if (existingOrder != null) {
+            existingOrder.setClientId(order.getClientId());
+            existingOrder.setProductId(order.getProductId());
+            existingOrder.setQuantity(order.getQuantity());
+            existingOrder.setOrderDate(order.getOrderDate());
+            existingOrder.setStatus(order.getStatus());
+            return ordersRepository.save(existingOrder);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteOrder(@PathVariable int id) {
+        ordersRepository.deleteById(id);
+    }
+}
+package com.proiect.demo.controller;
+
+import com.proiect.demo.entity.User;
+import com.proiect.demo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/users")
+public class UserController {
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping("/all")
+    public String getAllUsers(Model model) {
+        List<User> users = userRepository.findAll();
+        model.addAttribute("users", users);
+        return "user_list"; // Return the name of the HTML template
+    }
+
+    @GetMapping("/{id}")
+    public String getUserById(@PathVariable int id, Model model) {
+        User user = userRepository.findById(id).orElse(null);
+        model.addAttribute("user", user);
+        return "user_detail"; // Return the name of the HTML template
+    }
+
+    @PostMapping
+    @ResponseBody
+    public User createUser(@RequestBody User user) {
+        return userRepository.save(user);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public User updateUser(@PathVariable int id, @RequestBody User user) {
+        User existingUser = userRepository.findById(id).orElse(null);
+        if (existingUser != null) {
+            existingUser.setFirstName(user.getFirstName());
+            existingUser.setLastName(user.getLastName());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setPassword(user.getPassword());
+            existingUser.setRole(user.getRole());
+            return userRepository.save(existingUser);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteUser(@PathVariable int id) {
+        userRepository.deleteById(id);
+    }
+}
+package com.proiect.demo.controller;
+
+import com.proiect.demo.entity.ProductDiscount;
+import com.proiect.demo.repository.ProductDiscountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/productDiscounts")
+public class ProductDiscountController {
+    @Autowired
+    private ProductDiscountRepository productDiscountRepository;
+
+    @GetMapping("/all")
+    public String getAllProductDiscounts(Model model) {
+        List<ProductDiscount> productDiscounts = productDiscountRepository.findAll();
+        model.addAttribute("productDiscounts", productDiscounts);
+        return "productDiscount_list"; // Return the name of the HTML template
+    }
+
+    @GetMapping("/{id}")
+    public String getProductDiscountById(@PathVariable int id, Model model) {
+        ProductDiscount productDiscount = productDiscountRepository.findById(id).orElse(null);
+        model.addAttribute("productDiscount", productDiscount);
+        return "productDiscount_detail"; // Return the name of the HTML template
+    }
+
+    @PostMapping
+    @ResponseBody
+    public ProductDiscount createProductDiscount(@RequestBody ProductDiscount productDiscount) {
+        return productDiscountRepository.save(productDiscount);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public ProductDiscount updateProductDiscount(@PathVariable int id, @RequestBody ProductDiscount productDiscount) {
+        ProductDiscount existingProductDiscount = productDiscountRepository.findById(id).orElse(null);
+        if (existingProductDiscount != null) {
+            existingProductDiscount.setProductId(productDiscount.getProductId());
+            existingProductDiscount.setDiscount(productDiscount.getDiscount());
+            existingProductDiscount.setStartDate(productDiscount.getStartDate());
+            existingProductDiscount.setEndDate(productDiscount.getEndDate());
+            return productDiscountRepository.save(existingProductDiscount);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteProductDiscount(@PathVariable int id) {
+        productDiscountRepository.deleteById(id);
+    }
+}

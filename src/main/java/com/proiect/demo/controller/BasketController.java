@@ -1,35 +1,42 @@
 package com.proiect.demo.controller;
 
+import com.proiect.demo.entity.Basket;
 import com.proiect.demo.repository.BasketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.proiect.demo.entity.Basket;
-import  com.proiect.demo.repository.BasketRepository;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/basket")
+@Controller
+@RequestMapping("/baskets")
 public class BasketController {
     @Autowired
     private BasketRepository basketRepository;
 
     @GetMapping("/all")
-    public List<Basket> getAllBaskets() {
-        return basketRepository.findAll();
+    public String getAllBaskets(Model model) {
+        List<Basket> baskets = basketRepository.findAll();
+        model.addAttribute("baskets", baskets);
+        return "basket_list"; // Return the name of the HTML template
     }
 
     @GetMapping("/{id}")
-    public Basket getBasketById(@PathVariable int id) {
-        return basketRepository.findById(id).orElse(null);
+    public String getBasketById(@PathVariable int id, Model model) {
+        Basket basket = basketRepository.findById(id).orElse(null);
+        model.addAttribute("basket", basket);
+        return "basket_detail"; // Return the name of the HTML template
     }
 
     @PostMapping
+    @ResponseBody
     public Basket createBasket(@RequestBody Basket basket) {
         return basketRepository.save(basket);
     }
 
     @PutMapping("/{id}")
+    @ResponseBody
     public Basket updateBasket(@PathVariable int id, @RequestBody Basket basket) {
         Basket existingBasket = basketRepository.findById(id).orElse(null);
         if (existingBasket != null) {
@@ -42,6 +49,7 @@ public class BasketController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseBody
     public void deleteBasket(@PathVariable int id) {
         basketRepository.deleteById(id);
     }
