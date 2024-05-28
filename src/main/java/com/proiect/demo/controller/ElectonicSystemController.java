@@ -1,8 +1,8 @@
 package com.proiect.demo.controller;
 
-import com.proiect.demo.entity.Basket;
-import com.proiect.demo.entity.ElectronicSystem;
-import com.proiect.demo.repository.ElectronicSystemRepository;
+
+import com.proiect.demo.entity.*;
+import com.proiect.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +13,14 @@ import java.util.List;
 public class ElectonicSystemController {
     @Autowired
     private ElectronicSystemRepository electronicSystemRepository;
+    @Autowired
+    private BasketRepository basketRepository;
+    @Autowired
+    private ProductDiscountRepository discountRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
+    @Autowired
+    private OrdersRepository ordersRepository;
 
     @GetMapping("/all")
     public List<ElectronicSystem> getAllBaskets() {
@@ -46,6 +54,26 @@ public class ElectonicSystemController {
 
     @DeleteMapping("/{id}")
     public void deleteElectronicSystem(@PathVariable int id) {
+        List<Basket> baskets = basketRepository.findAllByProductId(id);
+        for (Basket basket : baskets) {
+            basketRepository.deleteById(basket.getId());
+        }
+
+        List<ProductDiscount> discounts = discountRepository.findAllByProductId(id);
+        for (ProductDiscount discount : discounts) {
+            discountRepository.deleteById(discount.getId());
+        }
+
+        List<Review> reviews = reviewRepository.findAllByProductId(id);
+        for(Review review: reviews){
+            reviewRepository.deleteById(review.getId());
+        }
+
+        List<Orders> orders = ordersRepository.findAllByProductId(id);
+        for(Orders order: orders){
+            ordersRepository.deleteById(order.getId());
+        }
+
         electronicSystemRepository.deleteById(id);
     }
 }
