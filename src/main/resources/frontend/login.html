@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+</head>
+<body>
+<h1>Login</h1>
+<form id="login-form" hx-post="/login" hx-trigger="submit">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password" required><br>
+    <button type="submit">Login</button>
+</form>
+
+<div id="login-result" hx-swap="outerHTML" style="margin-top: 20px;"></div>
+
+<script>
+    document.addEventListener('htmx:afterRequest', function (event) {
+        if (event.detail.target.id === 'login-form') {
+            var loginResult = document.getElementById('login-result');
+            try {
+                var response = JSON.parse(event.detail.response);
+                if (response.success) {
+                    loginResult.innerHTML = '<p>Login successful. Welcome, ' + response.user.firstName + '!</p>';
+                } else {
+                    loginResult.innerHTML = '<p>Error: ' + response.message + '</p>';
+                }
+            } catch (error) {
+                loginResult.innerHTML = '<p>Error: Invalid response from server</p>';
+                console.error(error);
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
