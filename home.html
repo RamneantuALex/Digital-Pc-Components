@@ -21,6 +21,7 @@
                     <button id="seniorButton" onclick="window.location.href='senior.html'">Senior</button>
                 </div>
                 <button id="basketButton" onclick="window.location.href='basket.html'">Basket</button>
+                <button onclick="window.location.href='login.html'">Login</button>
             </div>
         </div>
     </div>
@@ -45,26 +46,27 @@
             popupMenu.style.display = popupMenu.style.display === 'none' ? 'block' : 'none';
         });
 
-        document.getElementById('role-div').addEventListener('click', function() {
-            var popupMenu = document.getElementById('popup-menu');
-            popupMenu.style.display = popupMenu.style.display === 'none' ? 'block' : 'none';
-        });
 
-        document.getElementById('fetchUserButton').addEventListener('click', function() {
-            var userId = document.getElementById('userId').value;
+        window.onload = function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var userId = urlParams.get('userId');
 
+            if (userId === null) {
+                document.getElementById('userId').value = '';
+            } else {
+                document.getElementById('userId').value = userId;
+            }
+            document.getElementById('managerButton').style.display = 'none';
+            document.getElementById('juniorButton').style.display = 'none';
+            document.getElementById('seniorButton').style.display = 'none';
+
+            // Fetch the user details
             fetch('http://localhost:8081/user/' + userId)
                 .then(response => response.json())
                 .then(user => {
                     document.getElementById('managerButton').style.display = user.role === 'MANAGER' ? 'block' : 'none';
                     document.getElementById('juniorButton').style.display = user.role === 'JUNIOR_SWE' ? 'block' : 'none';
                     document.getElementById('seniorButton').style.display = user.role === 'SENIOR_SWE' ? 'block' : 'none';
-                    
-                    if (user.id == '6') {
-                        document.getElementById('managerButton').style.display = 'block';
-                        document.getElementById('juniorButton').style.display = 'block';
-                        document.getElementById('seniorButton').style.display = 'block';
-                    }
 
                     var userName = user.firstName && user.lastName ? user.firstName + ' ' + user.lastName : 'Account Name';
                     document.getElementById('userName').textContent = userName;
@@ -73,15 +75,7 @@
                     console.error('Error:', error);
                     document.getElementById('userName').textContent = 'Account Name';
                 });
-        });
-
-        window.onload = function() {
-            document.getElementById('userId').value = '';
-            document.getElementById('managerButton').style.display = 'none';
-            document.getElementById('juniorButton').style.display = 'none';
-            document.getElementById('seniorButton').style.display = 'none';
         };
-
 
     </script>
 

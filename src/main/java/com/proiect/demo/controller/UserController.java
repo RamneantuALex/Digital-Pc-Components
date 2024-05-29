@@ -4,15 +4,16 @@ import com.proiect.demo.entity.User;
 import com.proiect.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Map;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
-
 
     @GetMapping("/all")
     public List<User> getAllUsers() {
@@ -46,5 +47,27 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable int id) {
         userRepository.deleteById(id);
+    }
+
+    @GetMapping("/login")
+    public User loginUser(@RequestParam String email, @RequestParam String password) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
+            return userOpt.get();
+        } else {
+            return null;
+        }
+    }
+
+    @PostMapping("/login")
+    public User loginUser(@RequestBody Map<String, String> credentials) {
+        String email = credentials.get("email");
+        String password = credentials.get("password");
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
+            return userOpt.get();
+        } else {
+            return null;
+        }
     }
 }
