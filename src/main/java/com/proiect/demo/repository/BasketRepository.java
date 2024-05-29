@@ -3,6 +3,8 @@ package com.proiect.demo.repository;
 import com.proiect.demo.entity.Basket;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BasketRepository extends JpaRepository<Basket, Integer> {
+import java.util.List;
 
+public interface BasketRepository extends JpaRepository<Basket, Integer> {
+    List<Basket> findAllByProductId(Integer id);
 }

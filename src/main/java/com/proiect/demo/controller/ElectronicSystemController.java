@@ -1,50 +1,51 @@
 package com.proiect.demo.controller;
 
-import com.proiect.demo.entity.ElectronicSystem;
-import com.proiect.demo.repository.ElectronicSystemRepository;
+
+import com.proiect.demo.entity.*;
+import com.proiect.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/electronicSystems")
-public class ElectronicSystemController {
+@RestController
+@RequestMapping("/electronicSystem")
+public class ElectonicSystemController {
     @Autowired
     private ElectronicSystemRepository electronicSystemRepository;
+    @Autowired
+    private BasketRepository basketRepository;
+    @Autowired
+    private ProductDiscountRepository discountRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
+    @Autowired
+    private OrdersRepository ordersRepository;
 
     @GetMapping("/all")
-    public String getAllElectronicSystems(Model model) {
-        List<ElectronicSystem> electronicSystems = electronicSystemRepository.findAll();
-        model.addAttribute("electronicSystems", electronicSystems);
-        return "electronicSystem_list"; // Return the name of the HTML template
+    public List<ElectronicSystem> getAllBaskets() {
+        return electronicSystemRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public String getElectronicSystemById(@PathVariable int id, Model model) {
-        ElectronicSystem electronicSystem = electronicSystemRepository.findById(id).orElse(null);
-        model.addAttribute("electronicSystem", electronicSystem);
-        return "electronicSystem_detail"; // Return the name of the HTML template
+    public ElectronicSystem getElectronicSystemById(@PathVariable int id) {
+        return electronicSystemRepository.findById(id).orElse(null);
     }
 
     @PostMapping
-    @ResponseBody
     public ElectronicSystem createElectronicSystem(@RequestBody ElectronicSystem electronicSystem) {
         return electronicSystemRepository.save(electronicSystem);
     }
 
     @PutMapping("/{id}")
-    @ResponseBody
     public ElectronicSystem updateElectronicSystem(@PathVariable int id, @RequestBody ElectronicSystem electronicSystem) {
         ElectronicSystem existingElectronicSystem = electronicSystemRepository.findById(id).orElse(null);
         if (existingElectronicSystem != null) {
-            existingElectronicSystem.setPrice(electronicSystem.getPrice());
             existingElectronicSystem.setDescription(electronicSystem.getDescription());
+            existingElectronicSystem.setPrice(electronicSystem.getPrice());
             existingElectronicSystem.setPromotion(electronicSystem.isPromotion());
-            existingElectronicSystem.setStock(electronicSystem.getStock());
             existingElectronicSystem.setReview(electronicSystem.getReview());
+            existingElectronicSystem.setStock(electronicSystem.getStock());
             existingElectronicSystem.setSystemType(electronicSystem.getSystemType());
             return electronicSystemRepository.save(existingElectronicSystem);
         }
@@ -52,8 +53,27 @@ public class ElectronicSystemController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseBody
     public void deleteElectronicSystem(@PathVariable int id) {
+        List<Basket> baskets = basketRepository.findAllByProductId(id);
+        for (Basket basket : baskets) {
+            basketRepository.deleteById(basket.getId());
+        }
+
+        List<ProductDiscount> discounts = discountRepository.findAllByProductId(id);
+        for (ProductDiscount discount : discounts) {
+            discountRepository.deleteById(discount.getId());
+        }
+
+        List<Review> reviews = reviewRepository.findAllByProductId(id);
+        for(Review review: reviews){
+            reviewRepository.deleteById(review.getId());
+        }
+
+        List<Orders> orders = ordersRepository.findAllByProductId(id);
+        for(Orders order: orders){
+            ordersRepository.deleteById(order.getId());
+        }
+
         electronicSystemRepository.deleteById(id);
     }
 }

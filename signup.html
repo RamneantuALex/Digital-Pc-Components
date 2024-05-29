@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+</head>
+<body>
+<h1>Sign Up</h1>
+<form id="signup-form">
+    <label for="firstName">First Name:</label><br>
+    <input type="text" id="firstName" name="firstName" required><br>
+    <label for="lastName">Last Name:</label><br>
+    <input type="text" id="lastName" name="lastName" required><br>
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password" required><br><br>
+    <button type="submit">Sign Up</button>
+</form>
+
+<div id="signup-result" style="margin-top: 20px;"></div>
+
+<script>
+    document.querySelector('#signup-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from being submitted normally
+
+        var email = document.getElementById('email').value;
+
+        // Check if email already exists
+        fetch('http://localhost:8081/user/exists?email=' + encodeURIComponent(email))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(exists => {
+                if (exists) {
+                    alert('Email already exists');
+                } else {
+                    // Proceed with user creation
+                    var firstName = document.getElementById('firstName').value;
+                    var lastName = document.getElementById('lastName').value;
+                    var password = document.getElementById('password').value;
+
+                    var userData = {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        password: password
+                    };
+
+                    fetch('http://localhost:8081/user', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(userData),
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(user => {
+                            alert('User created successfully');
+                            window.location.href = 'login.html';
+                        })
+                        .catch((error) => {
+                            alert('Error creating user');
+                            console.error('Error:', error);
+                        });
+                }
+            })
+            .catch((error) => {
+                alert('Error checking email');
+                console.error('Error:', error);
+            });
+    });
+</script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    #signup-form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+        width: 300px;
+    }
+
+    #signup-form label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    #signup-form input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    #signup-form button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    #signup-form button:hover {
+        background-color: #0056b3;
+    }
+
+    #signup-result {
+        margin-top: 20px;
+    }
+</style>
+</body>
+</html>

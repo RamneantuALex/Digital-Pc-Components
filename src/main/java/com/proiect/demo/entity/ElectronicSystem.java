@@ -13,7 +13,6 @@ public class ElectronicSystem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private int price;
     private String description;
     private boolean promotion;
