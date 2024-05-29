@@ -42,15 +42,42 @@
     </ul>
 </div>
 
+<select id="systemType" name="systemType">
+    <option value="DESKTOP_PC">All</option>
+    <option value="DESKTOP_PC">Desktop PC</option>
+    <option value="LAPTOP_PC">Laptop PC</option>
+    <option value="PRINTER">Printer</option>
+    <option value="PERIPHERAL">Peripheral</option>
+    <option value="COMPONENT">Component</option>
+</select>
+
 <script>
+    var systemTypeSelect = document.getElementById('systemType');
+
+    systemTypeSelect.addEventListener('change', function() {
+        // Refresh the page when the selected system type changes
+        location.reload();
+    });
+
     document.addEventListener('htmx:afterRequest', function (event) {
         var systemList = document.getElementById('system-list');
         var systems = JSON.parse(systemList.textContent);
+        var selectedSystemType = systemTypeSelect.value;
 
-        var systemListHTML = '<table>';
-        systemListHTML += '<tr><th>ID</th><th>Price</th><th>Description</th><th>Promotion</th><th>Stock</th><th>Review</th><th>System Type</th></tr>';
-        systems.forEach(function(system) {
-            systemListHTML += '<tr>';
+        // If the selected system type is "ALL", include all systems, otherwise filter the systems
+        var filteredSystems;
+        if (selectedSystemType === 'All') {
+            filteredSystems = systems;
+        } else {
+            filteredSystems = systems.filter(function(system) {
+                return system.systemType === selectedSystemType;
+            });
+        }
+
+        var systemListHTML = '<table class="system-table">';
+        systemListHTML += '<tr class="system-table-header"><th>ID</th><th>Price</th><th>Description</th><th>Promotion</th><th>Stock</th><th>Review</th><th>System Type</th><th>Action</th></tr>';
+        filteredSystems.forEach(function(system) {
+            systemListHTML += '<tr class="system-table-row">';
             systemListHTML += '<td>' + system.id + '</td>';
             systemListHTML += '<td>' + system.price + '</td>';
             systemListHTML += '<td>' + system.description + '</td>';
@@ -58,11 +85,38 @@
             systemListHTML += '<td>' + system.stock + '</td>';
             systemListHTML += '<td>' + system.review + '</td>';
             systemListHTML += '<td>' + system.systemType + '</td>';
+            systemListHTML += '<td><button class="add-to-basket" data-id="' + system.id + '">Add to Basket</button></td>';
             systemListHTML += '</tr>';
         });
         systemListHTML += '</table>';
 
         systemList.innerHTML = systemListHTML;
+    });
+
+    document.addEventListener('click', function(event) {
+        if (event.target.matches('.add-to-basket')) {
+            var productId = event.target.getAttribute('data-id');
+            var urlParams = new URLSearchParams(window.location.search);
+            var userId = urlParams.get('userId');
+
+            fetch('http://localhost:8081/basket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ clientId: userId, productId: productId, quantity: 1 }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    alert('Product added to basket');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Failed to add product to basket');
+                });
+        }
     });
 </script>
 
