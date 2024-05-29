@@ -27,6 +27,8 @@ public class UserController {
 
     @PostMapping
     public User createUser(@RequestBody User user) {
+        // Ensure the role is set to CLIENT by default
+        user.setRole(User.Role.CLIENT);
         return userRepository.save(user);
     }
 
@@ -69,5 +71,10 @@ public class UserController {
         } else {
             return null;
         }
+    }
+
+    @GetMapping("/exists")
+    public boolean emailExists(@RequestParam String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }
