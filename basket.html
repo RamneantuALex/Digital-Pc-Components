@@ -30,12 +30,8 @@
     </div>
 </nav>
 
-<header>
-    <h1>Welcome to Our Electronic System Store</h1>
-</header>
-
 <h1>Product List</h1>
-<div id="system-list" hx-get="http://localhost:8081/electronicSystem/all" hx-trigger="load">
+<div id="system-list" hx-get="http://localhost:8081/basket/all" hx-trigger="load">
     <!-- JSON data will be inserted here by HTMX -->
     <ul>
         <li>Loading...</li>
@@ -48,31 +44,21 @@
         var systems = JSON.parse(systemList.textContent);
 
         var systemListHTML = '<table>';
-        systemListHTML += '<tr><th>ID</th><th>Price</th><th>Description</th><th>Promotion</th><th>Stock</th><th>Review</th><th>System Type</th></tr>';
+        systemListHTML += '<tr><th>ID</th><th>Quantity</th></tr>';
         systems.forEach(function(system) {
             systemListHTML += '<tr>';
-            systemListHTML += '<td>' + system.id + '</td>';
-            systemListHTML += '<td>' + system.price + '</td>';
-            systemListHTML += '<td>' + system.description + '</td>';
-            systemListHTML += '<td>' + (system.promotion ? 'Yes' : 'No') + '</td>';
-            systemListHTML += '<td>' + system.stock + '</td>';
-            systemListHTML += '<td>' + system.review + '</td>';
-            systemListHTML += '<td>' + system.systemType + '</td>';
+            systemListHTML += '<td>' + system.productId + '</td>';
+            systemListHTML += '<td>' + system.quantity + '</td>';
             systemListHTML += '</tr>';
         });
         systemListHTML += '</table>';
 
         systemList.innerHTML = systemListHTML;
     });
-</script>
+    </script>
 
-<main>
 
-    <script src="./navbar.js"></script>
+<script src="./navbar.js"></script>
 
-    <footer>
-        <p>Copyright &copy; 2024 Electronic System Store</p>
-    </footer>
-</main>
 </body>
 </html>

@@ -50,5 +50,65 @@
         });
     }
     </script>
+
+    <form id="addSystemForm">
+        <label for="price">Price:</label><br>
+        <input type="number" id="price" name="price"><br>
+        <label for="description">Description:</label><br>
+        <input type="text" id="description" name="description"><br>
+        <label for="promotion">Promotion:</label><br>
+        <input type="checkbox" id="promotion" name="promotion"><br>
+        <label for="stock">Stock:</label><br>
+        <input type="number" id="stock" name="stock"><br>
+        <label for="review">Review:</label><br>
+        <input type="text" id="review" name="review"><br>
+        <label for="systemType">System Type:</label><br>
+        <select id="systemType" name="systemType">
+            <option value="DESKTOP_PC">Desktop PC</option>
+            <option value="LAPTOP_PC">Laptop PC</option>
+            <option value="PRINTER">Printer</option>
+            <option value="PERIPHERAL">Peripheral</option>
+            <option value="COMPONENT">Component</option>
+        </select><br>
+        <input type="submit" value="Add System">
+    </form>
+<script>
+    document.getElementById('addSystemForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var price = document.getElementById('price').value;
+        var description = document.getElementById('description').value;
+        var promotion = document.getElementById('promotion').checked;
+        var stock = document.getElementById('stock').value;
+        var review = document.getElementById('review').value;
+        var systemType = document.getElementById('systemType').value;
+
+        var systemData = {
+            price: price,
+            description: description,
+            promotion: promotion,
+            stock: stock,
+            review: review,
+            systemType: systemType
+        };
+
+        fetch('http://localhost:8081/electronicSystem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(systemData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Refresh the system list after adding a new system
+                document.getElementById('system-list').dispatchEvent(new Event('htmx:refresh'));
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+</script>
 </body>
 </html>
