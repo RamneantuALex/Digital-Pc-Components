@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+</head>
+<body>
+<header>
+    <h1>Welcome to Our Electronic System Store</h1>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="produse_crud.html">Product List</a></li>
+        <!-- Add more navigation links as needed -->
+    </ul>
+</nav>
+
+<main>
+    <section>
+        <h2>About Us</h2>
+        <p>Information about the store...</p>
+    </section>
+
+
+    <!-- Button to redirect to produse_crud.html -->
+    <button onclick="window.location.href='produse_crud.html'">Product List</button>
+    <button id="managerButton" onclick="window.location.href='manager_page.html'">Manager</button>
+    <button id="juniorButton" onclick="window.location.href='junior.html'">Junior</button>
+    <button id="seniorButton" onclick="window.location.href='senior.html'">Senior</button>
+
+    <input type="text" id="userId" placeholder="Enter user ID">
+    <button id="fetchUserButton">Fetch User</button>
+
+
+    <script>
+        document.getElementById('fetchUserButton').addEventListener('click', function() {
+            // Get the entered user ID
+            var userId = document.getElementById('userId').value;
+
+            // Make an AJAX call to get the user data
+            fetch('http://localhost:8081/user/' + userId)
+                .then(response => response.json())
+                .then(user => {
+                    // Show or hide the manager button based on the user's role
+                    if (user.role === 'MANAGER') {
+                        document.getElementById('managerButton').style.display = 'block';
+                    } else {
+                        document.getElementById('managerButton').style.display = 'none';
+                    }
+
+                    if (user.role === 'JUNIOR_SWE') {
+                        document.getElementById('juniorButton').style.display = 'block';
+                    } else {
+                        document.getElementById('juniorButton').style.display = 'none';
+                    }
+
+                    if (user.role === 'SENIOR_SWE') {
+                        document.getElementById('seniorButton').style.display = 'block';
+                    } else {
+                        document.getElementById('seniorButton').style.display = 'none';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
+
+        window.onload = function() {
+            document.getElementById('userId').value = '';
+        };
+    </script>
+
+    <footer>
+        <p>Copyright &copy; 2024 Electronic System Store</p>
+    </footer>
+</main>
+</body>
+</html>
