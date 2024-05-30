@@ -15,40 +15,84 @@
         </ul>
     </div> 
 
+    <form id="add-product-form" hx-post="http://localhost:8081/electronicSystem" hx-headers='{"Content-Type":"application/json"}'>
+        <label for="price">Price:</label><br>
+        <input type="text" id="price" name="price"><br>
+        <label for="description">Description:</label><br>
+        <input type="text" id="description" name="description"><br>
+        <label for="promotion">Promotion:</label><br>
+        <input type="text" id="promotion" name="promotion"><br>
+        <label for="stock">Stock:</label><br>
+        <input type="text" id="stock" name="stock"><br>
+        <label for="review">Review:</label><br>
+        <input type="text" id="review" name="review"><br>
+        <label for="systemType">System Type:</label><br>
+        <input type="text" id="systemType" name="systemType"><br>
+        <input type="submit" value="Add Product">
+    </form>
+
     <script>
-    document.addEventListener('htmx:afterRequest', function (event) {
-        var systemList = document.getElementById('system-list');
-        var systems = JSON.parse(systemList.textContent);
 
-        var systemListHTML = '<table>';
-        systemListHTML += '<tr><th>ID</th><th>Price</th><th>Description</th><th>Promotion</th><th>Stock</th><th>Review</th><th>System Type</th><th>Action</th></tr>';
-        systems.forEach(function(system) {
-            systemListHTML += '<tr>';
-            systemListHTML += '<td>' + system.id + '</td>';
-            systemListHTML += '<td>' + system.price + '</td>';
-            systemListHTML += '<td>' + system.description + '</td>';
-            systemListHTML += '<td>' + (system.promotion ? 'Yes' : 'No') + '</td>';
-            systemListHTML += '<td>' + system.stock + '</td>';
-            systemListHTML += '<td>' + system.review + '</td>';
-            systemListHTML += '<td>' + system.systemType + '</td>';
-            systemListHTML += '<td><button onclick="deleteSystem(' + system.id + ')">Delete</button></td>';
-            systemListHTML += '</tr>';
+        // TABEL VIZUALIZARE PRODUSE
+
+        document.addEventListener('htmx:afterRequest', function (event) {
+            var systemList = document.getElementById('system-list');
+            var systems = JSON.parse(systemList.textContent);
+
+            var systemListHTML = '<table>';
+            systemListHTML += '<tr><th>ID</th><th>Price</th><th>Description</th><th>Promotion</th><th>Stock</th><th>Review</th><th>System Type</th><th>Action</th></tr>';
+            systems.forEach(function(system) {
+                systemListHTML += '<tr>';
+                systemListHTML += '<td>' + system.id + '</td>';
+                systemListHTML += '<td>' + system.price + '</td>';
+                systemListHTML += '<td>' + system.description + '</td>';
+                systemListHTML += '<td>' + (system.promotion ? 'Yes' : 'No') + '</td>';
+                systemListHTML += '<td>' + system.stock + '</td>';
+                systemListHTML += '<td>' + system.review + '</td>';
+                systemListHTML += '<td>' + system.systemType + '</td>';
+                systemListHTML += '<td><button onclick="deleteSystem(' + system.id + ')">Delete</button></td>';
+                systemListHTML += '</tr>';
+            });
+            systemListHTML += '</table>';
+
+            systemList.innerHTML = systemListHTML;
         });
-        systemListHTML += '</table>';
 
-        systemList.innerHTML = systemListHTML;
+        // FUNCTIE PT BUTOANELE DE DELETE
+
+        function deleteSystem(id) {
+            fetch('http://localhost:8081/electronicSystem/' + id, {
+                method: 'DELETE',
+            })
+            .then(response => response.text())
+            .then(() => {
+                // Refresh the system list after deletion
+                document.getElementById('system-list').dispatchEvent(new Event('htmx:refresh'));
+            });
+        }
+
+        // PT POST
+        document.getElementById('add-product-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var form = event.target;
+        var data = Object.fromEntries(new FormData(form).entries());
+
+        // Convert promotion to boolean
+        data.promotion = data.promotion.toLowerCase() === 'yes';
+
+        // Ensure systemType is one of the ENUM values
+        var validSystemTypes = ['DESKTOP_PC', 'LAPTOP_PC', 'PRINTER', 'PERIPHERAL', 'COMPONENT'];
+        if (!validSystemTypes.includes(data.systemType)) {
+            alert('Invalid system type');
+            return;
+        }
+
+        htmx.ajax('POST', form.action, data, {headers: {'Content-Type': 'application/json'}});
     });
 
-    function deleteSystem(id) {
-        fetch('http://localhost:8081/electronicSystem/' + id, {
-            method: 'DELETE',
-        })
-        .then(response => response.text())
-        .then(() => {
-            // Refresh the system list after deletion
-            document.getElementById('system-list').dispatchEvent(new Event('htmx:refresh'));
-        });
-    }
+        
+
+
     </script>
 
     <form id="addSystemForm">
