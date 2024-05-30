@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+    <div id="nav-div">
+        <div id="pages">
+            <button id="homeButton" onclick="window.location.href='home.html'">Home</button>
+            <button onclick="window.location.href='produse_crud.html'">Product List</button>
+        </div>
+        <div id="account-name">
+            <p id="userName">Account Name</p>
+            <div id="popup-menu">
+                <button onclick="window.location.href='Manager.html'">Page 1</button>
+                <div id="role-div">
+                    <button id="managerButton" onclick="window.location.href='manager_page.html'">Manager</button>
+                    <button id="juniorButton" onclick="window.location.href='junior.html'">Junior</button>
+                    <button id="seniorButton" onclick="window.location.href='senior.html'">Senior</button>
+                </div>
+                <button id="basketButton" onclick="window.location.href='basket.html'">Basket</button>
+                <button onclick="window.location.href='signup.html'">Sign-up</button>
+                <button onclick="window.location.href='login.html'">Login</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<h1>Employee List</h1>
+<button id="see-employees-btn" class="toggle-btn" onclick="toggleEmployeeList()">See Employees</button>
+<button onclick="toggleAddEmployeeForm()">Add Employee</button>
+<button id="see-promotion-btn" class="toggle-btn" onclick="togglePromotionList()">See Promotion</button>
+
+<div id="employee-list" class="hidden">
+    <!-- Loading message displayed until data is fetched -->
+    <ul>
+        <li>Loading...</li>
+    </ul>
+</div>
+
+<div id="promotion-list" class="hidden">
+    <!-- Loading message displayed until data is fetched -->
+    <ul>
+        <li>Loading...</li>
+    </ul>
+</div>
+
+<div id="employee-form-container" style="display:none;">
+    <form id="addEmployeeForm">
+        <label for="firstName">First Name:</label><br>
+        <input type="text" id="firstName" name="firstName" required><br>
+        <label for="lastName">Last Name:</label><br>
+        <input type="text" id="lastName" name="lastName" required><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br>
+        <label for="role1">Employee Type(Role):</label><br>
+        <select id="role1" name="role">
+            <option value="JUNIOR_SWE">Junior</option>
+            <option value="SENIOR_SWE">Senior</option>
+            <option value="CLIENT">Client</option>
+            <option value="MANAGER">Manager</option>
+        </select><br>
+        <input class="add-to-basket" type="submit" value="Add Employee">
+    </form>
+</div>
+
+<script>
+    let isEmployeeListLoaded = false;
+    let isAddEmployeeFormVisible = false;
+    let isPromotionListLoaded = false;
+
+    function fetchEmployees() {
+        fetch('http://localhost:8081/user/nonClient')
+            .then(response => response.json())
+            .then(employees => {
+                console.log(employees); // Check the received data
+                var employeeList = document.getElementById('employee-list');
+                var employeeListHTML = '<table border="1" class="system-table">';
+                employeeListHTML += '<tr class="system-table"><th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Password</th><th>Role</th><th>Action</th></tr>';
+                employees.forEach(function(employee) {
+                    employeeListHTML += '<tr class="system-table-row">';
+                    employeeListHTML += '<td>' + employee.id + '</td>';
+                    employeeListHTML += '<td>' + employee.firstName + '</td>';
+                    employeeListHTML += '<td>' + employee.lastName + '</td>';
+                    employeeListHTML += '<td>' + employee.email + '</td>';
+                    employeeListHTML += '<td>' + employee.password + '</td>';
+                    employeeListHTML += '<td>' + employee.role + '</td>';
+                    employeeListHTML += '<td><button class="add-to-basket" onclick="deleteEmployee(' + employee.id + ')">Delete</button></td>';
+                    employeeListHTML += '</tr>';
+                });
+                employeeListHTML += '</table>';
+                employeeList.innerHTML = employeeListHTML;
+                isEmployeeListLoaded = true;
+            });
+    }
+
+    function deleteEmployee(id) {
+        fetch('http://localhost:8081/user/' + id, {
+            method: 'DELETE',
+        })
+            .then(response => response.text())
+            .then(() => {
+                // Refresh the employee list after deletion
+                isEmployeeListLoaded = false; // Reset the flag to allow reloading
+                fetchEmployees(); // Reload the employee list
+            });
+    }
+
+    function toggleAddEmployeeForm() {
+        var employeeFormContainer = document.getElementById('employee-form-container');
+        if (!isAddEmployeeFormVisible) {
+            employeeFormContainer.style.display = 'block';
+        } else {
+            employeeFormContainer.style.display = 'none';
+        }
+        isAddEmployeeFormVisible = !isAddEmployeeFormVisible;
+    }
+
+    function toggleEmployeeList() {
+        var employeeList = document.getElementById('employee-list');
+        var seeEmployeesBtn = document.getElementById('see-employees-btn');
+        if (employeeList.classList.contains('hidden')) {
+            if (!isEmployeeListLoaded) {
+                fetchEmployees();
+            }
+            employeeList.classList.remove('hidden');
+            seeEmployeesBtn.textContent = "Hide Employees";
+        } else {
+            employeeList.classList.add('hidden');
+            seeEmployeesBtn.textContent = "See Employees";
+        }
+    }
+
+    document.getElementById('addEmployeeForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var firstname = document.getElementById('firstName').value;
+        var lastname = document.getElementById('lastName').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var role = document.getElementById('role1').value;
+
+        var employeeData = {
+            firstName: firstname,
+            lastName: lastname,
+            email: email,
+            password: password,
+            role: role
+        };
+
+        fetch('http://localhost:8081/user/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(employeeData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Refresh the employee list after adding a new employee
+                isEmployeeListLoaded = false; // Reset the flag to allow reloading
+                fetchEmployees(); // Reload the employee list
+                // Clear the form fields
+                document.getElementById('addEmployeeForm').reset();
+                alert('User created successfully');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error creating user');
+            });
+    });
+
+    function showPromotion() {
+        // Ensure the employee list is loaded
+        fetch('http://localhost:8081/electronicSystem/promotion')
+            .then(response => response.json())
+            .then(systems => {
+                console.log(systems); // Check the received data
+                var systemsList = document.getElementById('promotion-list');
+                var systemsListHTML = '<table border="1" class="system-table">';
+                systemsListHTML += '<tr class="system-table"><th>ID</th><th>Name</th><th>Type</th><th>Promotion Details</th></tr>';
+                systems.forEach(function(system) {
+                    systemsListHTML += '<tr class="system-table-row">';
+                    systemsListHTML += '<td>' + system.id + '</td>';
+                    systemsListHTML += '<td>' + system.description + '</td>';
+                    systemsListHTML += '<td>' + system.systemType + '</td>';
+                    systemsListHTML += '<td>' + system.promotion + '</td>';
+                    systemsListHTML += '</tr>';
+                });
+                systemsListHTML += '</table>';
+                systemsList.innerHTML = systemsListHTML;
+                isPromotionListLoaded = true;
+            });
+    }
+
+    function togglePromotionList() {
+        var promotionList = document.getElementById('promotion-list');
+        var seePromotionBtn = document.getElementById('see-promotion-btn');
+        if (promotionList.classList.contains('hidden')) {
+            if (!isPromotionListLoaded) {
+                showPromotion();
+            }
+            promotionList.classList.remove('hidden');
+            seePromotionBtn.textContent = "Hide Promotion";
+        } else {
+            promotionList.classList.add('hidden');
+            seePromotionBtn.textContent = "See Promotion";
+        }
+    }
+</script>
+
+<style>
+    /* General styling */
+    h1 {
+        text-align: center;
+        color: #343a40;
+    }
+
+    /* Buttons styling */
+    button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 4px;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .add-to-basket {
+        background-color: #28a745;
+        border-radius: 4px;
+        padding: 8px 16px;
+    }
+
+    .add-to-basket:hover {
+        background-color: #218838;
+    }
+
+    /* Table styling */
+    table.system-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+    }
+
+    table.system-table th, table.system-table td {
+        padding: 12px 15px;
+        border: 1px solid #dee2e6;
+    }
+
+    table.system-table th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    table.system-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Form styling */
+    #employee-form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        margin: 20px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+
+    form label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    form input, form select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+
+    form input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    form input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    /* Toggle visibility */
+    .hidden {
+        display: none;
+    }
+
+    /* Responsive design */
+    @media (max-width: 600px) {
+        table.system-table, form {
+            width: 100%;
+        }
+
+        form input, form select {
+            width: 100%;
+        }
+    }
+</style>
+
+<script src="navbar.js"></script>
+</body>
+</html>

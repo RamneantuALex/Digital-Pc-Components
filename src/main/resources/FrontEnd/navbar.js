@@ -10,7 +10,11 @@ document.getElementById('basketButton').addEventListener('click', function() {
     var userId = urlParams.get('userId');
     window.location.href = 'basket.html?userId=' + userId;
 });
-
+document.getElementById('managerButton').addEventListener('click', function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var userId = urlParams.get('userId');
+    window.location.href = 'Manager.html?userId=' + userId;
+});
 
 // Redirect the id home page
 document.getElementById('homeButton').addEventListener('click', function() {
