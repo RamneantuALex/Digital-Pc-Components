@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="navbar.js"></script>
+</head>
+<body>
+<nav>
+    <div id="nav-div">
+        <div id="pages">
+            <button id="homeButton" onclick="window.location.href='home.html'">Home</button>
+        </div>
+        <div id="account-name">
+            <p id="userName">Account Name</p>
+            <div id="popup-menu">
+                <div id="role-div">
+                    <button id="managerButton" onclick="window.location.href='Manager.html'">Manager</button>
+                    <button id="juniorButton" onclick="window.location.href='junior.html'">Junior</button>
+                    <button id="seniorButton" onclick="window.location.href='senior.html'">Senior</button>
+                </div>
+                <button id="basketButton" onclick="window.location.href='basket.html'">Basket</button>
+                <button onclick="window.location.href='signup.html'">Sign-up</button>
+                <button onclick="window.location.href='login.html'">Login</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<h1>Product List</h1>
+<button id="see-products-btn" class="toggle-btn" onclick="toggleProductList()">See Products</button>
+<button onclick="toggleAddProductForm()">Add Product</button>
+
+<div id="product-list" class="hidden">
+    <!-- Lista de produse -->
+    <ul>
+        <li>Loading...</li>
+    </ul>
+</div>
+
+<div id="product-form-container" style="display:none;">
+    <!-- Formularul pentru adăugare produs -->
+    <form id="addProductForm">
+        <label for="price">Price:</label><br>
+        <input type="number" id="price" name="price" required><br>
+        <label for="description">Description:</label><br>
+        <input type="text" id="description" name="description" required><br>
+        <label for="promotion">Promotion:</label><br>
+        <input type="checkbox" id="promotion" name="promotion"><br>
+        <label for="stock">Stock:</label><br>
+        <input type="number" id="stock" name="stock" required><br>
+        <label for="review">Review:</label><br>
+        <input type="text" id="review" name="review" required><br>
+        <label for="systemType">System Type:</label><br>
+        <select id="systemType" name="systemType">
+            <option value="DESKTOP_PC">Desktop PC</option>
+            <option value="LAPTOP_PC">Laptop PC</option>
+            <option value="PRINTER">Printer</option>
+            <option value="PERIPHERAL">Peripheral</option>
+            <option value="COMPONENT">Component</option>
+        </select><br>
+        <input class="add-to-basket" type="submit" value="Add Product">
+    </form>
+</div>
+
+<script>
+    let isProductListLoaded = false;
+    let isAddProductFormVisible = false;
+
+    function fetchProducts() {
+        fetch('http://localhost:8081/electronicSystem/all')
+            .then(response => response.json())
+            .then(products => {
+                console.log(products); // Verifică datele primite
+                var productList = document.getElementById('product-list');
+                var productListHTML = '<table border="1" class="system-table">';
+                productListHTML += '<tr class="system-table"><th>ID</th><th>Price</th><th>Description</th><th>Promotion</th><th>Stock</th><th>Review</th><th>System Type</th><th>Action</th></tr>';
+                products.forEach(function(product) {
+                    productListHTML += '<tr class="system-table-row">';
+                    productListHTML += '<td>' + product.id + '</td>';
+                    productListHTML += '<td>' + product.price + '</td>';
+                    productListHTML += '<td>' + product.description + '</td>';
+                    productListHTML += '<td>' + (product.promotion ? 'Yes' : 'No') + '</td>';
+                    productListHTML += '<td>' + product.stock + '</td>';
+                    productListHTML += '<td>' + product.review + '</td>';
+                    productListHTML += '<td>' + product.systemType + '</td>';
+                    productListHTML += '<td><button class="add-to-basket" onclick="deleteProduct(' + product.id + ')">Delete</button></td>';
+                    productListHTML += '</tr>';
+                });
+                productListHTML += '</table>';
+                productList.innerHTML = productListHTML;
+                isProductListLoaded = true;
+            });
+    }
+
+    function deleteProduct(id) {
+        fetch('http://localhost:8081/electronicSystem/' + id, {
+            method: 'DELETE',
+        })
+            .then(response => response.text())
+            .then(() => {
+                // Reîncarcă lista de produse după ștergere
+                isProductListLoaded = false; // Resetăm flag-ul pentru a permite reîncărcarea
+                fetchProducts(); // Reîncărcăm lista de produse
+            });
+    }
+
+    function toggleAddProductForm() {
+        var productFormContainer = document.getElementById('product-form-container');
+        if (!isAddProductFormVisible) {
+            productFormContainer.style.display = 'block';
+        } else {
+            productFormContainer.style.display = 'none';
+        }
+        isAddProductFormVisible = !isAddProductFormVisible;
+    }
+
+    function toggleProductList() {
+        var productList = document.getElementById('product-list');
+        var seeProductsBtn = document.getElementById('see-products-btn');
+        if (productList.classList.contains('hidden')) {
+            if (!isProductListLoaded) {
+                fetchProducts();
+            }
+            productList.classList.remove('hidden');
+            seeProductsBtn.textContent = "Hide Products";
+        } else {
+            productList.classList.add('hidden');
+            seeProductsBtn.textContent = "See Products";
+        }
+    }
+
+    document.getElementById('addProductForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var price = document.getElementById('price').value;
+        var description = document.getElementById('description').value;
+        var promotion = document.getElementById('promotion').checked;
+        var stock = document.getElementById('stock').value;
+        var review = document.getElementById('review').value;
+        var systemType = document.getElementById('systemType').value;
+
+        var productData = {
+            price: price,
+            description: description,
+            promotion: promotion,
+            stock: stock,
+            review: review,
+            systemType: systemType
+        };
+
+        fetch('http://localhost:8081/electronicSystem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(productData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Reîncarcă lista de produse după adăugarea unui nou produs
+                isProductListLoaded = false; // Resetăm flag-ul pentru a permite reîncărcarea
+                fetchProducts(); // Reîncărcăm lista de produse
+                // Șterge valorile din câmpurile formularului
+                document.getElementById('addProductForm').reset();
+                alert('Product added successfully');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error adding product');
+            });
+    });
+</script>
+
+<style>
+    /* General styling */
+    h1 {
+        text-align: center;
+        color: #343a40;
+    }
+
+    /* Buttons styling */
+    button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 4px;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .add-to-basket {
+        background-color: #28a745;
+        border-radius: 4px;
+        padding: 8px 16px;
+    }
+
+    .add-to-basket:hover {
+        background-color: #218838;
+    }
+
+    /* Table styling */
+    table.system-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+    }
+
+    table.system-table th, table.system-table td {
+        padding: 12px 15px;
+        border: 1px solid #dee2e6;
+    }
+
+    table.system-table th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    table.system-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Form styling */
+    #employee-form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        margin: 20px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+
+    form label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    form input, form select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+
+    form input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    form input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    /* Toggle visibility */
+    .hidden {
+        display: none;
+    }
+
+    /* Responsive design */
+    @media (max-width: 600px) {
+        table.system-table, form {
+            width: 100%;
+        }
+
+        form input, form select {
+            width: 100%;
+        }
+    }
+</style>
+<script src="navbar.js"></script>
+</body>
+</html>

@@ -3,6 +3,7 @@ package com.proiect.demo.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "Orders")
@@ -32,6 +33,13 @@ public class Orders {
         this.quantity = quantity;
         this.orderDate = orderDate;
         this.status = status;
+    }
+    public void changeStatus(String newStatus) {
+        if (Arrays.stream(Status.values()).anyMatch(status -> status.name().equals(newStatus))) {
+            this.status = Status.valueOf(newStatus);
+        } else {
+            throw new IllegalArgumentException("Invalid status: " + newStatus);
+        }
     }
 
     // Getters and setters

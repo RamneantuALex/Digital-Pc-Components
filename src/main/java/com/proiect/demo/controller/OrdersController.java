@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static java.lang.String.valueOf;
+
 @RestController
 @RequestMapping("/orders")
 public class OrdersController {
@@ -27,6 +29,16 @@ public class OrdersController {
     public Orders createOrders(@RequestBody Orders orders) {
         return ordersRepository.save(orders);
     }
+    @PutMapping("/change/{id}")
+    public Orders changeStatus(@PathVariable int id, @RequestBody String newStatus) {
+        Orders existingOrder = ordersRepository.findById(id).orElse(null);
+        if (existingOrder != null) {
+           existingOrder.changeStatus(newStatus); // Actualizare status
+            return ordersRepository.save(existingOrder);
+        }
+        return null;
+    }
+
 
     @PutMapping("/{id}")
     public Orders updateOrders(@PathVariable int id, @RequestBody Orders orders) {

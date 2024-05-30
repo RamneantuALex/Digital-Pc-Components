@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+    <div id="nav-div">
+        <div id="pages">
+            <button id="homeButton" onclick="window.location.href='home.html'">Home</button>
+            <button onclick="window.location.href='produse_crud.html'">Product List</button>
+        </div>
+        <div id="account-name">
+            <p id="userName">Account Name</p>
+            <div id="popup-menu">
+                <button onclick="window.location.href='Manager.html'">Page 1</button>
+                <div id="role-div">
+                    <button id="managerButton" onclick="window.location.href='manager_page.html'">Manager</button>
+                    <button id="juniorButton" onclick="window.location.href='junior.html'">Junior</button>
+                    <button id="seniorButton" onclick="window.location.href='senior.html'">Senior</button>
+                </div>
+                <button id="basketButton" onclick="window.location.href='basket.html'">Basket</button>
+                <button onclick="window.location.href='signup.html'">Sign-up</button>
+                <button onclick="window.location.href='login.html'">Login</button>
+            </div>
+        </div>
+    </div>
+</nav>
+<h1>Orders</h1>
+<div id="order-list">
+    <!-- Aici vor fi afișate comenzile -->
+</div>
+
+<script>
+    // Funcție pentru afișarea comenzilor
+    function fetchOrders() {
+        fetch('http://localhost:8081/orders/all')
+            .then(response => response.json())
+            .then(orders => {
+                var orderList = document.getElementById('order-list');
+                var ordersHTML = '<table>';
+                ordersHTML += '<tr><th>Order ID</th><th>Client ID</th><th>Product ID</th><th>Quantity</th><th>Order Date</th><th>Status</th><th>Action</th></tr>';
+                orders.forEach(function(order) {
+                    ordersHTML += '<tr>';
+                    ordersHTML += '<td>' + order.id + '</td>';
+                    ordersHTML += '<td>' + order.clientId + '</td>';
+                    ordersHTML += '<td>' + order.productId + '</td>';
+                    ordersHTML += '<td>' + order.quantity + '</td>';
+                    ordersHTML += '<td>' + order.orderDate + '</td>';
+                    ordersHTML += '<td>' + order.status + '</td>';
+                    ordersHTML += '<td><button onclick="changeStatus(' + order.id + ')">Change Status</button></td>';
+                    ordersHTML += '</tr>';
+                });
+                ordersHTML += '</table>';
+                orderList.innerHTML = ordersHTML;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Funcție pentru modificarea statusului comenzii
+    function changeStatus(orderId) {
+        var newStatus = prompt("Enter new status:");
+        if (newStatus !== null && newStatus !== "") {
+            fetch('http://localhost:8081/orders/change/' + orderId, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'text/plain' // Schimbați tipul de conținut la text simplu
+                },
+                body: newStatus // Trimiteți doar statusul, nu un obiect JSON
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Status updated successfully:', data);
+                    fetchOrders(); // Reîncărcăm lista de comenzi pentru a reflecta modificările
+                })
+                .catch(error => console.error('Error updating status:', error));
+        }
+    }
+
+
+    // Afișăm comenzile la încărcarea paginii
+    fetchOrders();
+</script>
+<style>
+    /* General styling */
+    h1 {
+        text-align: center;
+        color: #343a40;
+    }
+
+    /* Buttons styling */
+    button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 4px;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .add-to-basket {
+        background-color: #28a745;
+        border-radius: 4px;
+        padding: 8px 16px;
+    }
+
+    .add-to-basket:hover {
+        background-color: #218838;
+    }
+
+    /* Table styling */
+    table.system-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+    }
+
+    table.system-table th, table.system-table td {
+        padding: 12px 15px;
+        border: 1px solid #dee2e6;
+    }
+
+    table.system-table th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    table.system-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Form styling */
+    #employee-form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        margin: 20px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+
+    form label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    form input, form select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+
+    form input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    form input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    /* Toggle visibility */
+    .hidden {
+        display: none;
+    }
+
+    /* Responsive design */
+    @media (max-width: 600px) {
+        table.system-table, form {
+            width: 100%;
+        }
+
+        form input, form select {
+            width: 100%;
+        }
+    }
+</style>
+</body>
+</html>

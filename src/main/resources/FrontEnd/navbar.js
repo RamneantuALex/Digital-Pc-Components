@@ -31,7 +31,6 @@ window.onload = function() {
     document.getElementById('managerButton').style.display = 'none';
     document.getElementById('juniorButton').style.display = 'none';
     document.getElementById('seniorButton').style.display = 'none';
-
     // Fetch the user details
     fetch('http://localhost:8081/user/' + userId)
         .then(response => response.json())
