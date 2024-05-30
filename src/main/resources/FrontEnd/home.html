@@ -6,6 +6,61 @@
     <title>Home Page</title>
     <link rel="stylesheet" href="./style.css">
     <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+    <style>
+        /* Add the CSS for the detail button */
+        .details-button, .add-to-basket {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .details-button:hover, .add-to-basket:hover {
+            background-color: #45a049;
+        }
+
+        /* Enhanced table styling */
+        .system-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+
+        .system-table th, .system-table td {
+            padding: 12px 15px;
+        }
+
+        .system-table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .system-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .system-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .system-table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+
+        .system-table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
 <nav>
@@ -49,7 +104,8 @@
         var systems = JSON.parse(systemList.textContent);
 
         var systemListHTML = '<table class="system-table">';
-        systemListHTML += '<tr class="system-table-header"><th>ID</th><th>Price</th><th>Description</th><th>Promotion</th><th>Stock</th><th>Review</th><th>System Type</th><th>Action</th></tr>';
+        systemListHTML += '<thead><tr class="system-table-header"><th>ID</th><th>Price</th><th>Description</th><th>Promotion</th><th>Stock</th><th>Review</th><th>System Type</th><th>Action</th></tr></thead>';
+        systemListHTML += '<tbody>';
         systems.forEach(function(system) {
             systemListHTML += '<tr class="system-table-row">';
             systemListHTML += '<td>' + system.id + '</td>';
@@ -62,6 +118,7 @@
             systemListHTML += '<td><button class="add-to-basket" data-id="' + system.id + '">Add to Basket</button> <button class="details-button" data-id="' + system.id + '">Details</button></td>';
             systemListHTML += '</tr>';
         });
+        systemListHTML += '</tbody>';
         systemListHTML += '</table>';
 
         systemList.innerHTML = systemListHTML;

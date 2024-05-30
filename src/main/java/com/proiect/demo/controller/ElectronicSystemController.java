@@ -26,6 +26,10 @@ public class ElectonicSystemController {
     public List<ElectronicSystem> getAllBaskets() {
         return electronicSystemRepository.findAll();
     }
+    @GetMapping("/promotion")
+    public List<ElectronicSystem> getAllPromotions() {
+        return electronicSystemRepository.findByPromotion(true);
+    }
 
     @GetMapping("/{id}")
     public ElectronicSystem getElectronicSystemById(@PathVariable int id) {

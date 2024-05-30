@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+        }
+
+        nav button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        nav button:hover {
+            background-color: #45a049;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #product-details {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        #product-details h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        #product-details p {
+            margin-bottom: 5px;
+        }
+
+        .review {
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .review p {
+            margin-bottom: 5px;
+        }
+
+        .add-to-basket {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .add-to-basket:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <button id="homeButton" onclick="window.location.href='home.html'">Home</button>
+    <button onclick="window.location.href='produse_crud.html'">Product List</button>
+</nav>
+
+<main>
+    <div id="product-details">
+        <!-- Product details will be loaded here -->
+        <p>Loading...</p>
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var productId = urlParams.get('id');
+        var userId = urlParams.get('userId'); // Get the userId from the URL parameters if available
+
+        fetch('http://localhost:8081/electronicSystem/' + productId)
+            .then(response => response.json())
+            .then(product => {
+                var productDetailsHTML = '<h1>' + product.description + '</h1>';
+                productDetailsHTML += '<p><strong>Price:</strong> ' + product.price + '</p>';
+                productDetailsHTML += '<p><strong>Stock:</strong> ' + product.stock + '</p>';
+                productDetailsHTML += '<p><strong>Promotion:</strong> ' + (product.promotion ? 'Yes' : 'No') + '</p>';
+                productDetailsHTML += '<p><strong>System Type:</strong> ' + product.systemType + '</p>';
+
+                // Display review
+                if (product.review) {
+                    productDetailsHTML += '<h2>Review</h2>';
+                    productDetailsHTML += '<div class="review">';
+                    productDetailsHTML += '<p>' + product.review + '</p>';
+                    productDetailsHTML += '</div>';
+                }
+
+                // Add to Basket button
+                productDetailsHTML += '<button class="add-to-basket" data-id="' + product.id + '">Add to Basket</button>';
+
+                document.getElementById('product-details').innerHTML = productDetailsHTML;
+
+                // Add event listener for Add to Basket button
+                document.querySelector('.add-to-basket').addEventListener('click', function() {
+                    fetch('http://localhost:8081/basket', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ clientId: userId, productId: product.id, quantity: 1 }),
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            alert('Product added to basket');
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                            alert('Failed to add product to basket');
+                        });
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching product details:', error);
+                document.getElementById('product-details').innerHTML = '<p>Error loading product details</p>';
+            });
+    });
+</script>
+
+<footer>
+    <p>&copy; 2024 Stresu Computers</p>
+</footer>
+
+</body>
+</html>
