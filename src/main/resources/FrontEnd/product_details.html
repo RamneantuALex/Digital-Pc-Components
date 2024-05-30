@@ -103,10 +103,25 @@
 <body>
 
 <nav>
-    <button id="homeButton" onclick="window.location.href='home.html'">Home</button>
-    <button onclick="window.location.href='produse_crud.html'">Product List</button>
+    <div id="nav-div">
+        <div id="pages">
+            <button id="homeButton" onclick="window.location.href='home.html'">Home</button>
+        </div>
+        <div id="account-name">
+            <p id="userName">Account Name</p>
+            <div id="popup-menu">
+                <div id="role-div">
+                    <button id="managerButton" onclick="window.location.href='manager_page.html'">Manager</button>
+                    <button id="juniorButton" onclick="window.location.href='junior.html'">Junior</button>
+                    <button id="seniorButton" onclick="window.location.href='senior.html'">Senior</button>
+                </div>
+                <button id="basketButton" onclick="window.location.href='basket.html'">Basket</button>
+                <button onclick="window.location.href='signup.html'">Sign-up</button>
+                <button onclick="window.location.href='login.html'">Login</button>
+            </div>
+        </div>
+    </div>
 </nav>
-
 <main>
     <div id="product-details">
         <!-- Product details will be loaded here -->
@@ -173,6 +188,9 @@
 <footer>
     <p>&copy; 2024 Stresu Computers</p>
 </footer>
+
+
+<script src="./navbar.js"></script>
 
 </body>
 </html>
