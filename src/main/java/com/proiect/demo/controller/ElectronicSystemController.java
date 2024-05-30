@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/electronicSystem")
-public class ElectonicSystemController {
+public class ElectronicSystemController {
     @Autowired
     private ElectronicSystemRepository electronicSystemRepository;
     @Autowired
