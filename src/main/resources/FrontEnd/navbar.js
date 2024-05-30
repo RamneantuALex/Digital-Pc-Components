@@ -15,7 +15,11 @@ document.getElementById('managerButton').addEventListener('click', function() {
     var userId = urlParams.get('userId');
     window.location.href = 'Manager.html?userId=' + userId;
 });
-
+document.getElementById('juniorButton').addEventListener('click', function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var userId = urlParams.get('userId');
+    window.location.href = 'junior.html?userId=' + userId;
+});
 // Redirect the id home page
 document.getElementById('homeButton').addEventListener('click', function() {
     var urlParams = new URLSearchParams(window.location.search);
