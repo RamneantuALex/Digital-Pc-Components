@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+</head>
+<body>
+<h1>Login</h1>
+<form id="login-form" hx-post="http://127.0.0.1:8080/user/login" hx-trigger="submit" hx-target="#login-result">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password" required><br>
+    <button type="submit">Login</button>
+</form>
+
+<div id="login-result" style="margin-top: 20px;"></div>
+
+<script>
+    document.querySelector('#login-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from being submitted normally
+
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+
+        fetch('http://localhost:8081/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email, password: password }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(user => {
+                if (user) {
+                    // Redirect to home.html with the user ID as a URL parameter
+                    window.location.href = 'home.html?userId=' + user.id;
+                }
+            })
+            .catch((error) => {
+                // Show an "invalid" message
+                alert('Invalid login credentials');
+                console.error('Error:', error);
+            });
+    });
+</script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    #login-form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+        width: 300px;
+    }
+
+    #login-form label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    #login-form input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    #login-form button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    #login-form button:hover {
+        background-color: #0056b3;
+    }
+
+    #login-result {
+        margin-top: 20px;
+    }
+</style>
+</body>
+</html>

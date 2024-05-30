@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+</head>
+<body>
+<nav>
+    <div id="nav-div">
+        <div id="pages">
+            <button id="homeButton" onclick="window.location.href='home.html'">Home</button>
+            <button onclick="window.location.href='produse_crud.html'">Product List</button>
+        </div>
+        <div id="account-name">
+            <p id="userName">Account Name</p>
+            <div id="popup-menu">
+                <button onclick="window.location.href='page1.html'">Page 1</button>
+                <div id="role-div">
+                    <button id="managerButton" onclick="window.location.href='manager_page.html'">Manager</button>
+                    <button id="juniorButton" onclick="window.location.href='junior.html'">Junior</button>
+                    <button id="seniorButton" onclick="window.location.href='senior.html'">Senior</button>
+                </div>
+                <button id="basketButton" onclick="window.location.href='basket.html'">Basket</button>
+                <button onclick="window.location.href='login.html'">Login</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<h1>Product List</h1>
+<div id="system-list" hx-get="http://localhost:8081/basket/all" hx-trigger="load">
+    <!-- JSON data will be inserted here by HTMX -->
+    <ul>
+        <li>Loading...</li>
+    </ul>
+</div>
+
+<script>
+    document.addEventListener('htmx:afterRequest', function (event) {
+        var systemList = document.getElementById('system-list');
+        var systems = JSON.parse(systemList.textContent);
+
+        var systemListHTML = '<table>';
+        systemListHTML += '<tr><th>ID</th><th>Quantity</th></tr>';
+        systems.forEach(function(system) {
+            systemListHTML += '<tr>';
+            systemListHTML += '<td>' + system.productId + '</td>';
+            systemListHTML += '<td>' + system.quantity + '</td>';
+            systemListHTML += '</tr>';
+        });
+        systemListHTML += '</table>';
+
+        systemList.innerHTML = systemListHTML;
+    });
+    </script>
+
+
+<script src="./navbar.js"></script>
+
+</body>
+</html>
