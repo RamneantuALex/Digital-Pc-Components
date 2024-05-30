@@ -65,28 +65,28 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable int id) {
-        List<Basket> baskets = basketRepository.findAllByProductId(id);
+    public void deleteElectronicSystem(@PathVariable int id) {
+        List<Basket> baskets = basketRepository.findAllById(id);
         for (Basket basket : baskets) {
             basketRepository.deleteById(basket.getId());
         }
-        List<Review> reviews = reviewRepository.findAllByProductId(id);
+        List<ServiceRequest> serviceRequests = serviceRequestRepository.findAllById(id);
+        for(ServiceRequest serviceRequest : serviceRequests) {
+            serviceRequestRepository.deleteById(serviceRequest.getId());
+        }
+        List<Review> reviews = reviewRepository.findAllById(id);
         for(Review review: reviews){
             reviewRepository.deleteById(review.getId());
         }
 
-        List<Orders> orders = ordersRepository.findAllByProductId(id);
+        List<Orders> orders = ordersRepository.findAllById(id);
         for(Orders order: orders){
             ordersRepository.deleteById(order.getId());
         }
-    List<ServiceRequest> serviceRequests=serviceRequestRepository.findAllById(id);
-        for(ServiceRequest serviceRequest: serviceRequests){
-            serviceRequestRepository.deleteById(serviceRequest.getId());
-        }
+
         userRepository.deleteById(id);
     }
-
-    @GetMapping("/login")
+        @GetMapping("/login")
     public User loginUser(@RequestParam String email, @RequestParam String password) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
