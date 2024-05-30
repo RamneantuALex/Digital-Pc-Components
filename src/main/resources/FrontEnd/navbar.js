@@ -20,6 +20,12 @@ document.getElementById('juniorButton').addEventListener('click', function() {
     var userId = urlParams.get('userId');
     window.location.href = 'junior.html?userId=' + userId;
 });
+
+document.getElementById('seniorButton').addEventListener('click', function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var userId = urlParams.get('userId');
+    window.location.href = 'senior.html?userId=' + userId;
+});
 // Redirect the id home page
 document.getElementById('homeButton').addEventListener('click', function() {
     var urlParams = new URLSearchParams(window.location.search);
@@ -40,7 +46,7 @@ window.onload = function() {
         .then(response => response.json())
         .then(user => {
             document.getElementById('managerButton').style.display = user.role === 'MANAGER' ? 'block' : 'none';
-            document.getElementById('juniorButton').style.display = user.role === 'JUNIOR_SWE' ? 'block' : 'none';
+            document.getElementById('juniorButton').style.display = user.role === 'JUNIOR_SWE' || user.role === 'SENIOR_SWE' ? 'block' : 'none';
             document.getElementById('seniorButton').style.display = user.role === 'SENIOR_SWE' ? 'block' : 'none';
 
             var userName = user.firstName && user.lastName ? user.firstName + ' ' + user.lastName : 'Account Name';
